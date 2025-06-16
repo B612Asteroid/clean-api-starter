@@ -38,7 +38,7 @@ import org.starter.api.core.log.StructuredLogger
  */
 @Configuration
 @EnableWebSecurity
-class SecurityConfig(private val tokenProvider: TokenProvider?) {
+class SecurityConfig(private val tokenProvider: TokenProvider) {
     /**
      * 시큐리트 환경 설정 및 경로 설정.
      *

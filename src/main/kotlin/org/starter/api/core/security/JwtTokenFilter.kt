@@ -4,7 +4,6 @@ import jakarta.servlet.FilterChain
 import jakarta.servlet.ServletException
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
-import kr.co.chunjae.aidtlcms.core.SystemPropertyHelper
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.security.core.Authentication
@@ -65,7 +64,7 @@ class JwtTokenFilter(private val tokenProvider: TokenProvider) : OncePerRequestF
 
 
     companion object {
-        val AUTHORIZATION_HEADER: String? = SystemPropertyHelper.getProperty("jwt.headerKey")
+        val AUTHORIZATION_HEADER: String? = "jwt.headerKey"
         private val log: Logger = LoggerFactory.getLogger(JwtTokenFilter::class.java)
     }
 }
