@@ -18,6 +18,10 @@ class User() : Persistable() {
     override var id: Long? = null
 
     @Column(nullable = false, unique = true)
+    var userId: String = ""
+        protected set
+
+    @Column(nullable = false, unique = true)
     var email: String = ""
         protected set
 

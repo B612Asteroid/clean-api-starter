@@ -18,11 +18,10 @@ import java.time.ZonedDateTime
 import java.util.*
 
 /**
- * @author suhans
- * @email lsuhan00@chunjae.co.kr
- * @create date 2023-12-11 14:02:345
- * @modify date 2023-12-11 14:02:345
- * @desc JWT 토큰 관련 CLASS
+ * 토큰 생성 / 조회 클래스
+ *
+ * @property userDetailsService
+ * @constructor Create empty Token provider
  */
 @Component
 class TokenProvider(

@@ -23,4 +23,6 @@ class UserDetailsAdapter(
 
     fun getId(): Long = user.id ?: 0L
     fun getRole(): String = user.role.name
+
+    fun getUser() = user
 }

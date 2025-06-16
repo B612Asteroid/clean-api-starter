@@ -1,11 +1,9 @@
 package kr.co.chunjae.aidtlcms.user.token
 
 /**
- * @author suhans
- * @email lsuhan00@chunjae.co.kr
- * @create date 2023-12-11 14:04:3451
- * @modify date 2023-12-11 14:04:345
- * @desc 토큰
+ * Token
+ *
+ * @constructor Create empty Token
  */
 class Token {
     var grantType: String? = null

@@ -3,10 +3,13 @@ package org.starter.api.core.error
 
 import jakarta.servlet.http.HttpServletRequest
 import org.apache.catalina.connector.ClientAbortException
+import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.security.core.userdetails.UsernameNotFoundException
 import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.ResponseStatus
+import org.starter.api.core.log.StructuredLogger
 import org.starter.api.core.response.ErrorResponse
 import org.starter.api.core.response.ResponseObject
 
@@ -128,13 +131,13 @@ class ErrorControllerAdvice {
     @ResponseStatus(org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(UsernameNotFoundException::class)
     fun handle(e: UsernameNotFoundException, request: HttpServletRequest): ResponseEntity<ResponseObject?> {
-        StructuredLogger.INSTANCE.error("USER_NOT_FOUND", e, request.getParameterMap())
+        StructuredLogger.error("USER_NOT_FOUND", e, request.parameterMap)
         return ResponseEntity.status(org.springframework.http.HttpStatus.UNAUTHORIZED.value()).body<ResponseObject?>(
             ErrorResponse(
                 "401",
                 e,
                 false,
-                e.getLocalizedMessage(),
+                e.localizedMessage,
                 null
             )
         )
@@ -148,19 +151,19 @@ class ErrorControllerAdvice {
      * @param request
      * @return
      */
-    @org.springframework.web.bind.annotation.ResponseStatus(org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR)
-    @org.springframework.web.bind.annotation.ExceptionHandler(PersistenceException::class)
-    fun handle(e: PersistenceException, request: HttpServletRequest?): ResponseEntity<ResponseObject?> {
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ExceptionHandler(PersistenceException::class)
+    fun handle(e: PersistenceException, request: HttpServletRequest): ResponseEntity<ResponseObject> {
         // #. 클래스 내부 에러일 때,
-        StructuredLogger.INSTANCE.error("PERSISTENCE_ERROR", e, java.util.HashMap<K?, V?>())
+        StructuredLogger.error("PERSISTENCE_ERROR", e, request.parameterMap)
         return ResponseEntity
-            .status(org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR.value())
-            .body<ResponseObject?>(
+            .status(HttpStatus.INTERNAL_SERVER_ERROR.value())
+            .body(
                 ErrorResponse(
-                    TypeUtil.stringValue(org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR.value()),
+                    HttpStatus.INTERNAL_SERVER_ERROR.value().toString(),
                     e,
                     false,
-                    e.getMessage(),
+                    e.message,
                     null
                 )
             )
@@ -174,19 +177,19 @@ class ErrorControllerAdvice {
      * @param request
      * @return
      */
-    @org.springframework.web.bind.annotation.ResponseStatus(org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR)
-    @org.springframework.web.bind.annotation.ExceptionHandler(java.lang.Exception::class)
-    fun handle(e: java.lang.Exception?, request: HttpServletRequest?): ResponseEntity<ResponseObject?> {
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ExceptionHandler(Exception::class)
+    fun handle(e: Exception, request: HttpServletRequest): ResponseEntity<ResponseObject> {
         // #. 그 외 내부 에러일 때
-        StructuredLogger.INSTANCE.error("INTERNAL_ERROR", e, java.util.HashMap<K?, V?>())
+        StructuredLogger.error("INTERNAL_ERROR", e, request.parameterMap)
         return ResponseEntity
-            .status(org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR.value())
-            .body<ResponseObject?>(
+            .status(HttpStatus.INTERNAL_SERVER_ERROR.value())
+            .body(
                 ErrorResponse(
-                    TypeUtil.stringValue(org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR.value()),
+                    HttpStatus.INTERNAL_SERVER_ERROR.value().toString(),
                     e,
-                    false,  // #. 서버 에러가 발생했습니다. 관리자에게 문의하세요.
-                    MessageHelper.getMessage("COMMON.ERR01"),
+                    false,
+                    "알수 없는 오류가 발생했습니다.",
                     null
                 )
             )

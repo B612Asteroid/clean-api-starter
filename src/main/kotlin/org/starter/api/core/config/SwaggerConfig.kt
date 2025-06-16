@@ -1,53 +1,52 @@
 package org.starter.api.core.config
 
 import io.swagger.v3.oas.annotations.OpenAPIDefinition
+import io.swagger.v3.oas.annotations.info.Info
+import io.swagger.v3.oas.models.Components
+import io.swagger.v3.oas.models.OpenAPI
+import io.swagger.v3.oas.models.security.SecurityRequirement
+import io.swagger.v3.oas.models.security.SecurityScheme
+import io.swagger.v3.oas.models.servers.Server
+import org.springframework.context.annotation.Bean
+import org.springframework.context.annotation.Configuration
+import org.springframework.web.filter.ForwardedHeaderFilter
 
 @OpenAPIDefinition(info = Info(title = "API 명세서", description = "API 명세서", version = "0.1"))
-@org.springframework.context.annotation.Configuration
+@Configuration
 class SwaggerConfig {
-    @org.springframework.context.annotation.Bean
+    @Bean
     fun openAPI(): OpenAPI {
         val securityScheme: SecurityScheme? = SecurityScheme()
             .type(SecurityScheme.Type.HTTP)
             .scheme("bearer")
             .bearerFormat("JWT")
             .`in`(SecurityScheme.In.HEADER)
-            .name(SystemPropertyHelper.getProperty("jwt.headerKey"))
+            .name("jwt.headerKey")
 
         val securityRequirement: SecurityRequirement? = SecurityRequirement().addList("bearerAuth")
 
-        val dev: Server = Server()
-        dev.setUrl("http://223.130.134.2/api")
-        dev.setDescription("Dev Server URL")
+        val profile = System.getProperty("spring.profiles.active")
 
-        val prod: Server = Server()
-        prod.setUrl("https://lcms2.aitextbook.co.kr/api")
-        prod.setDescription("LCMS Prod URL")
+        val dev = Server()
+        dev.url = "dev-server"
+        dev.description = "Dev Server"
 
-        val profile = java.lang.System.getProperty("spring.profiles.active")
+        val prod = Server()
+        prod.url = "prod-server"
+        prod.description = "Prod Server"
 
         return OpenAPI()
             .components(Components().addSecuritySchemes("bearerAuth", securityScheme))
             .info(
-                Info()
+                io.swagger.v3.oas.models.info.Info()
                     .title("외부 전용 API")
                     .version("1.0")
             )
             .addServersItem(if ("prod" == profile) prod else dev)
-            .addTagsItem(Tag().name("ExternalController").description("외부 공유 용 컨트롤러"))
-            .security(kotlin.collections.mutableListOf<T?>(securityRequirement))
+            .security(listOf(securityRequirement))
     }
 
-    @org.springframework.context.annotation.Bean
-    fun myControllerApi(): GroupedOpenApi {
-        return GroupedOpenApi.builder()
-            .group("external-controller-group") // 그룹 이름 설정
-            .packagesToScan("kr.co.chunjae.aidtlcms.external")
-            .pathsToMatch("/external/**") // 특정 경로만 매칭
-            .build()
-    }
-
-    @org.springframework.context.annotation.Bean
+    @Bean
     fun forwardedHeaderFilter(): ForwardedHeaderFilter {
         return ForwardedHeaderFilter()
     }
