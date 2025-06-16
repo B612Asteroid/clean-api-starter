@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
 plugins {
     val kotlin_version = "2.0.20"
     id("org.springframework.boot") version "3.1.5"
@@ -42,11 +44,30 @@ dependencies {
     implementation("io.jsonwebtoken:jjwt-impl:0.11.5")
     implementation("io.jsonwebtoken:jjwt-jackson:0.11.5")
 
+    // #. 로그 수집기
+    implementation("net.logstash.logback:logstash-logback-encoder:7.4")
+
+    // JPA & QueryDSL
+    implementation("com.querydsl:querydsl-jpa:5.0.0:jakarta")
+    implementation("com.querydsl:querydsl-apt:5.0.0:jakarta")
+
+    implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
+    implementation("org.jetbrains.kotlin:kotlin-reflect")
+
+    implementation("com.querydsl:querydsl-sql:${dependencyManagement.importedProperties["querydsl.version"]}")
+    implementation("com.querydsl:querydsl-sql-spring:${dependencyManagement.importedProperties["querydsl.version"]}")
+    kapt("com.querydsl:querydsl-apt:5.0.0:jakarta")
+    kapt("org.hibernate.javax.persistence:hibernate-jpa-2.1-api:1.0.2.Final")
+    kapt("org.springframework.boot:spring-boot-configuration-processor")
+
+    implementation("jakarta.persistence:jakarta.persistence-api")
+    implementation("jakarta.annotation:jakarta.annotation-api")
+    implementation("com.blazebit:blaze-persistence-integration-querydsl-expressions-jakarta:1.6.11")
 }
 
 kotlin {
     compilerOptions {
-        freeCompilerArgs.addAll("-Xjsr305=strict")
+        jvmTarget.set(JvmTarget.JVM_17)
     }
 }
 
@@ -56,6 +77,16 @@ allOpen {
     annotation("jakarta.persistence.Embeddable")
 }
 
+val querydslDir = "build/generated/sources/annotationProcessor"
+idea {
+    module {
+        val kaptMain = file(querydslDir)
+        sourceDirs.add(kaptMain)
+        generatedSourceDirs.add(kaptMain)
+    }
+}
+
 tasks.withType<Test> {
     useJUnitPlatform()
 }
+

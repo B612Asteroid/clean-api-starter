@@ -29,13 +29,13 @@ class RedisStreamInitializer(
                 appProperties.redis.group
             )
         } catch (e: RedisSystemException) {
-            if (e.cause?.message?.contains("BUSYGROUP") == true) {
+            if (e.cause?.message?.contains("BUSYGROUP") == false) {
                 StructuredLogger.error("STREAM_GROUP_INIT_FAIL", e, HashMap())
                 throw e
             }
             // #. 이미 있어서 Exception이 나는 경우에는 무시한다.
         } catch (e: RedisBusyException) {
-            if (e.cause?.message?.contains("BUSYGROUP") == true) {
+            if (e.cause?.message?.contains("BUSYGROUP") == false) {
                 StructuredLogger.error("STREAM_GROUP_INIT_FAIL", e, HashMap())
                 throw e
             }

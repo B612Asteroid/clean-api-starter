@@ -22,6 +22,7 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher
 import org.springframework.web.cors.CorsConfiguration
 import org.springframework.web.cors.CorsConfigurationSource
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource
+import org.starter.api.core.AppProperties
 import org.starter.api.core.error.ForbiddenException
 import org.starter.api.core.log.StructuredLogger
 
@@ -33,7 +34,10 @@ import org.starter.api.core.log.StructuredLogger
  */
 @Configuration
 @EnableWebSecurity
-class SecurityConfig(private val tokenProvider: TokenProvider) {
+class SecurityConfig(
+    private val tokenProvider: TokenProvider,
+    private val appProperties: AppProperties
+) {
     /**
      * 시큐리트 환경 설정 및 경로 설정.
      *
@@ -50,16 +54,15 @@ class SecurityConfig(private val tokenProvider: TokenProvider) {
                     corsConfigurationSource()
                 )
             }
-            .sessionManagement(
-                Customizer { sessionManagement: SessionManagementConfigurer<HttpSecurity?>? ->
-                    sessionManagement?.sessionCreationPolicy(
-                        SessionCreationPolicy.STATELESS
-                    )
-                }) // sessonPlicy
-            .authorizeHttpRequests(Customizer { auth ->
+            .sessionManagement { sessionManagement: SessionManagementConfigurer<HttpSecurity?>? ->
+                sessionManagement?.sessionCreationPolicy(
+                    SessionCreationPolicy.STATELESS
+                )
+            } // sessonPlicy
+            .authorizeHttpRequests { auth ->
                 auth
                     .requestMatchers(
-                        *arrayOf<AntPathRequestMatcher>(
+                        *arrayOf(
                             AntPathRequestMatcher("/user/login"),
                             AntPathRequestMatcher("/user/refresh"),
                             AntPathRequestMatcher("/v3/api-docs/**"),
@@ -75,10 +78,10 @@ class SecurityConfig(private val tokenProvider: TokenProvider) {
                     .permitAll()
                     .requestMatchers(AntPathRequestMatcher("/**"))
                     .authenticated()
-            }) //                        .requestMatchers(new AntPathRequestMatcher("/**"))
+            } //                        .requestMatchers(new AntPathRequestMatcher("/**"))
             //                        .access(new AuthorizationChackProvider()))
 
-            .addFilterBefore(JwtTokenFilter(tokenProvider), UsernamePasswordAuthenticationFilter::class.java)
+            .addFilterBefore(JwtTokenFilter(tokenProvider, appProperties), UsernamePasswordAuthenticationFilter::class.java)
 
             .exceptionHandling { exceptionHandler ->
                 exceptionHandler

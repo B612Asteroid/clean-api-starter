@@ -31,7 +31,6 @@ class TokenProvider(
     private val logger: Logger = LoggerFactory.getLogger(TokenProvider::class.java)
     private val EXPIRE_TIME: Long = 12000
     private val REFRESH_TIME: Long = 24000
-    private val SECRET_KEY = appProperties.jwt.secret
     private var key: Key? = null
 
     /**
@@ -40,7 +39,7 @@ class TokenProvider(
      * @throws Exception
      */
     override fun afterPropertiesSet() {
-        val keyBytes: ByteArray? = Decoders.BASE64.decode(SECRET_KEY)
+        val keyBytes: ByteArray? = Decoders.BASE64.decode(appProperties.jwt.secret)
         this.key = Keys.hmacShaKeyFor(keyBytes)
     }
 

@@ -1,6 +1,6 @@
 app:
   jwt:
-    secret: "blboong-top-secret"
+    secret: "b472e9219bb7d50d1ea8b835e9f86043872e1368898a7e44529fbc5dc1c96c04e3ec3dd27f3799b018bb9b8ee11173d3b27e6f9afb22192c2a233f03792cddf6"
     expire-seconds: 3600
     authorization-header: Authorization
 
