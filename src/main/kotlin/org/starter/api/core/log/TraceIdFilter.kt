@@ -24,7 +24,7 @@ class TraceIdFilter : OncePerRequestFilter() {
             val traceId = incomingTraceId ?: UUID.randomUUID().toString().replace("-", "").take(24)
             MDC.put("traceId", traceId)
             response.setHeader("X-Trace-Id", traceId)
-            val user = SecurityHelper.loginedUser
+            val user = SecurityHelper.loginUserId
             if (user != null) {
                 MDC.put("userId", user.id.toString())
             }

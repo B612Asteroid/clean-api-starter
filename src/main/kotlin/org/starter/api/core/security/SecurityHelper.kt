@@ -20,7 +20,7 @@ object SecurityHelper {
      */
     val context: SecurityContext = SecurityContextHolder.getContext()
 
-    val loginedUser: User?
+    val loginUserId: String?
         /**
          * 시큐리티 컨텍스트에 저장된 로그인 유저를 가져온다.
          *
@@ -34,7 +34,7 @@ object SecurityHelper {
             }
             val principal = authentication.principal
             if (principal is UserDetailsAdapter) {
-                return principal.getUser()
+                return principal.getUserId()
             } else {
                 return null
             }
@@ -45,5 +45,5 @@ object SecurityHelper {
      *
      * @return
      */
-    fun isLogined(): Boolean = loginedUser != null && loginedUser?.isNew == false
+    fun isLogined(): Boolean = loginUserId != null
 }

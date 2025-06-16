@@ -10,5 +10,5 @@ import java.util.*
 @EnableJpaAuditing
 class LoginUserAuditorAware : AuditorAware<String> {
     override fun getCurrentAuditor(): Optional<String> =
-        Optional.ofNullable(SecurityHelper.loginedUser?.userId ?: "")
+        Optional.ofNullable(SecurityHelper.loginUserId ?: "")
 }

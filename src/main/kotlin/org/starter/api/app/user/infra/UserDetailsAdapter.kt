@@ -22,7 +22,6 @@ class UserDetailsAdapter(
     override fun isEnabled() = true
 
     fun getId(): Long = user.id ?: 0L
+    fun getUserId(): String = user.userId
     fun getRole(): String = user.role.name
-
-    fun getUser() = user
 }
