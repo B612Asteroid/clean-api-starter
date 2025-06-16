@@ -38,6 +38,6 @@ open class CodeEnumConverter<E>(private val type: Class<E>) : AttributeConverter
                 return codeNum as E
             }
         }
-        throw NullPointerException("없음.")
+        throw IllegalArgumentException("없음.")
     }
 }
