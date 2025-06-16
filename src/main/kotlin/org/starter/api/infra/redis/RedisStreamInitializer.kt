@@ -4,23 +4,29 @@ import io.lettuce.core.RedisBusyException
 import jakarta.annotation.PostConstruct
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import org.springframework.context.annotation.Profile
 import org.springframework.data.redis.RedisSystemException
 import org.springframework.data.redis.connection.stream.ReadOffset
 import org.springframework.data.redis.core.RedisTemplate
+import org.springframework.stereotype.Component
+import org.starter.api.core.AppProperties
 import org.starter.api.core.log.StructuredLogger
 
-@org.springframework.stereotype.Component
-@org.springframework.context.annotation.Profile("!test")
-class RedisStreamInitializer(private val redisTemplate: RedisTemplate<String, Any>) {
+@Component
+@Profile("!test")
+class RedisStreamInitializer(
+    private val redisTemplate: RedisTemplate<String, Any>,
+    private val appProperties: AppProperties,
+) {
 
     @PostConstruct
     fun init() {
         try {
             log.info("🌱 Redis Stream Group Init Start")
             redisTemplate.opsForStream<String, Any>().createGroup(
-                "redis.stream.key",
+                appProperties.redis.streamKey,
                 ReadOffset.latest(),
-                "redis.stream.group"
+                appProperties.redis.group
             )
         } catch (e: RedisSystemException) {
             if (e.cause?.message?.contains("BUSYGROUP") == true) {

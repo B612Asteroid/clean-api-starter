@@ -14,5 +14,7 @@ spring:
   sql:
     init:
       mode: always
+  profiles:
+    include: app
 server:
   port: 8080

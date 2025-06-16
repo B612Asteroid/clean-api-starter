@@ -1,0 +1,8 @@
+app:
+  jwt:
+    secret: "test-secret"
+    expire-seconds: 9999
+
+  redis:
+    stream-key: "test-stream"
+    group: "test-group"

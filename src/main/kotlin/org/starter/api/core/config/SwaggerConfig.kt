@@ -10,10 +10,13 @@ import io.swagger.v3.oas.models.servers.Server
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.web.filter.ForwardedHeaderFilter
+import org.starter.api.core.AppProperties
 
 @OpenAPIDefinition(info = Info(title = "API 명세서", description = "API 명세서", version = "0.1"))
 @Configuration
-class SwaggerConfig {
+class SwaggerConfig(
+    val appProperties: AppProperties
+) {
     @Bean
     fun openAPI(): OpenAPI {
         val securityScheme: SecurityScheme? = SecurityScheme()
@@ -21,7 +24,7 @@ class SwaggerConfig {
             .scheme("bearer")
             .bearerFormat("JWT")
             .`in`(SecurityScheme.In.HEADER)
-            .name("jwt.headerKey")
+            .name(appProperties.jwt.authorizationHeader)
 
         val securityRequirement: SecurityRequirement? = SecurityRequirement().addList("bearerAuth")
 

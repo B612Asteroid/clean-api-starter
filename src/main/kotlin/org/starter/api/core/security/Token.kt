@@ -1,20 +1,8 @@
-package kr.co.chunjae.aidtlcms.user.token
+package org.starter.api.core.security
 
 /**
  * Token
  *
  * @constructor Create empty Token
  */
-class Token {
-    var grantType: String? = null
-    var accessToken: String? = null
-    var refreshToken: String? = null
-
-    constructor(grantType: String?, accessToken: String?, refreshToken: String?) {
-        this.grantType = grantType
-        this.accessToken = accessToken
-        this.refreshToken = refreshToken
-    }
-
-    constructor()
-}
+class Token(private var grantType: String?, private var accessToken: String?, private var refreshToken: String?)

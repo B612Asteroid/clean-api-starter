@@ -3,7 +3,6 @@ package org.starter.api.core.security
 import io.jsonwebtoken.*
 import io.jsonwebtoken.io.Decoders
 import io.jsonwebtoken.security.Keys
-import kr.co.chunjae.aidtlcms.user.token.Token
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.InitializingBean
@@ -12,6 +11,7 @@ import org.springframework.security.core.Authentication
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.stereotype.Component
+import org.starter.api.core.AppProperties
 import org.starter.api.core.error.InvalidTokenException
 import java.security.Key
 import java.time.ZonedDateTime
@@ -26,11 +26,12 @@ import java.util.*
 @Component
 class TokenProvider(
     private val userDetailsService: UserDetailsService,
+    private val appProperties: AppProperties
 ) : InitializingBean {
     private val logger: Logger = LoggerFactory.getLogger(TokenProvider::class.java)
     private val EXPIRE_TIME: Long = 12000
     private val REFRESH_TIME: Long = 24000
-    private val SECRET_KEY = "jwt.secretKey"
+    private val SECRET_KEY = appProperties.jwt.secret
     private var key: Key? = null
 
     /**

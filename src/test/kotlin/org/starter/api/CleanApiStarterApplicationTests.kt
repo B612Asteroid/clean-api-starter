@@ -1,4 +1,4 @@
-package org.starter.api.v1
+package org.starter.api
 
 import org.junit.jupiter.api.Test
 import org.springframework.boot.test.context.SpringBootTest

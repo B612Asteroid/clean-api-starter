@@ -78,7 +78,7 @@ class PersistenceService(private val em: EntityManager) {
             if (obj.isNew) {
                 em.persist(obj)
             } else {
-                em.merge<Persistable?>(obj)
+                em.merge(obj)
             }
         }
         return objs

@@ -9,10 +9,17 @@ import org.slf4j.LoggerFactory
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.web.filter.OncePerRequestFilter
+import org.starter.api.core.AppProperties
 import org.starter.api.core.error.InvalidTokenException
 import java.io.IOException
 
-class JwtTokenFilter(private val tokenProvider: TokenProvider) : OncePerRequestFilter() {
+class JwtTokenFilter(
+    private val tokenProvider: TokenProvider,
+    private val appProperties: AppProperties
+) : OncePerRequestFilter() {
+
+    private val AUTHORIZATION_HEADER: String = appProperties.jwt.authorizationHeader
+
     /**
      * 필터 적용
      *
@@ -64,7 +71,7 @@ class JwtTokenFilter(private val tokenProvider: TokenProvider) : OncePerRequestF
 
 
     companion object {
-        val AUTHORIZATION_HEADER: String? = "jwt.headerKey"
+
         private val log: Logger = LoggerFactory.getLogger(JwtTokenFilter::class.java)
     }
 }

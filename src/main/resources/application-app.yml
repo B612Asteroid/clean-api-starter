@@ -1,0 +1,9 @@
+app:
+  jwt:
+    secret: "blboong-top-secret"
+    expire-seconds: 3600
+    authorization-header: Authorization
+
+  redis:
+    stream-key: "stream:events"
+    group: "group:main"
