@@ -10,5 +10,10 @@ interface CodeEnum : Serializable {
      * getter 역할을 함
      * @return
      */
-    val code: String?
+    val code: String
+
+    /**
+     * 라벨로 쓸 이름
+     */
+    val label: String
 }

@@ -34,7 +34,7 @@ class PersistenceService(private val em: EntityManager) {
     </T> */
     @Transactional(rollbackFor = [Exception::class])
     @Throws(PersistenceException::class)
-    fun <T> save(obj: T?): T? {
+    fun <T> save(obj: T): T {
         if (obj !is Persistable) {
             throw PersistenceException("해당 클래스는 최상위 클래스의 자식 클래스가 아닙니다.")
         }
@@ -104,8 +104,8 @@ class PersistenceService(private val em: EntityManager) {
      * @throws PersistenceException
      */
     @Throws(PersistenceException::class)
-    fun getReference(oid: String): Persistable? {
-        val bulksStrings: Array<String?> = oid.split(":".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
+    fun getReference(oid: String): Persistable {
+        val bulksStrings: Array<String> = oid.split(":".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
         try {
             val clazz = Class.forName(bulksStrings[0])
             val persistable = clazz.getConstructor().newInstance() as Persistable
@@ -194,13 +194,13 @@ class PersistenceService(private val em: EntityManager) {
 
 
     /**//////////////////////// #. private //////////////////////// */
-   /**
-    * (non-Javadoc)
-    * 필드명과 아이디를 가지고 클래스를 찾아오는 동적 쿼리 생성
-    *
-    * @param clazz
-    * @param sourceId
-    * @ return CriteriaQuery<T>
+    /**
+     * (non-Javadoc)
+     * 필드명과 아이디를 가지고 클래스를 찾아오는 동적 쿼리 생성
+     *
+     * @param clazz
+     * @param sourceId
+     * @ return CriteriaQuery<T>
     </T> */
     @Throws(PersistenceException::class)
     private fun <T> buildFindByQuery(clazz: Class<T?>, sourceId: Long?): CriteriaQuery<T?>? {
@@ -227,6 +227,6 @@ class PersistenceService(private val em: EntityManager) {
      */
     private fun hasDeclaredField(clazz: Class<*>): Boolean {
         return Arrays.stream(clazz.getDeclaredFields())
-            .anyMatch { field: Field? -> field!!.getName() == "source" }
+            .anyMatch { field: Field -> field.name == "source" }
     }
 }

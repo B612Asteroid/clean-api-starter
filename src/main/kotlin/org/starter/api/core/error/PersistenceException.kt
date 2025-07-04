@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.ResponseStatus
  * 최상위 Exception
  */
 @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-class PersistenceException : Exception {
+open class PersistenceException : Exception {
     // 생성자
     constructor(message: String?) : super(message)
 

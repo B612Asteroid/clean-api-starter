@@ -2,6 +2,7 @@ package org.starter.api.infra.jpa
 
 import jakarta.persistence.AttributeConverter
 import jakarta.persistence.Converter
+import org.starter.api.core.util.TypeUtil
 
 /**
  * 타입핸들러 조상 클래스
@@ -15,7 +16,7 @@ open class CodeEnumConverter<E>(private val type: Class<E>) : AttributeConverter
     }
 
     public override fun convertToDatabaseColumn(codeEnum: CodeEnum?): String? {
-        return if (codeEnum != null) codeEnum.code else null
+        return codeEnum?.code
     }
 
     private fun getCodeEnum(code: String): CodeEnum {
@@ -32,12 +33,6 @@ open class CodeEnumConverter<E>(private val type: Class<E>) : AttributeConverter
     </T> */
     @Throws(TypeCastException::class, NullPointerException::class)
     fun getCodeEnum(type: Class<out CodeEnum>, code: String): E {
-        val enumConstants: Array<CodeEnum> = type.enumConstants as Array<CodeEnum>
-        for (codeNum in enumConstants) {
-            if (codeNum.code.equals(code)) {
-                return codeNum as E
-            }
-        }
-        throw IllegalArgumentException("없음.")
+        return TypeUtil.getCodeEnum(type, code)
     }
 }

@@ -63,6 +63,13 @@ dependencies {
     implementation("jakarta.persistence:jakarta.persistence-api")
     implementation("jakarta.annotation:jakarta.annotation-api")
     implementation("com.blazebit:blaze-persistence-integration-querydsl-expressions-jakarta:1.6.11")
+
+    implementation("com.amazonaws:aws-java-sdk-bom:1.12.220")
+    implementation("com.amazonaws:aws-java-sdk-s3:1.12.638")
+
+    // File Upload & Commons IO
+    implementation("commons-fileupload:commons-fileupload:1.4")
+    implementation("commons-io:commons-io:2.7")
 }
 
 kotlin {
