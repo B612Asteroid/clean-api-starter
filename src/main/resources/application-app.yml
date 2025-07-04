@@ -1,6 +1,6 @@
 app:
   jwt:
-    secret: "your-secret"
+    secret: "6S395P93478F2JF1CAZ66I77CH457477U508K61EP01UI531DCG225864205O8UK"
     expire-seconds: 3600
     authorization-header: Authorization
 
