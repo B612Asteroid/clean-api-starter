@@ -45,7 +45,7 @@ class AttachmentUploadUseCase(
     fun execute(attachmentUploadCommand: AttachmentUploadCommand): Attachment {
         val attachment = Attachment()
 
-        if (attachmentUploadCommand.file.isEmpty()) {
+        if (attachmentUploadCommand.file.isEmpty) {
             // #. MultipartFile 존재하지 않음
             throw PersistenceException(messageSourceWrapper.get("UPLOAD.ERR012"))
         }

@@ -4,14 +4,6 @@ import com.amazonaws.AmazonClientException
 import com.amazonaws.AmazonServiceException
 import com.amazonaws.SdkClientException
 import com.amazonaws.services.s3.model.AmazonS3Exception
-import org.starter.api.app.file.domain.Attachment
-import org.starter.api.app.file.domain.UploaderType
-import org.starter.api.app.file.ui.AttachmentDTO
-import org.starter.api.core.error.PersistenceException
-import org.starter.api.core.log.StructuredLogger
-import org.starter.api.core.util.TypeUtil
-import org.starter.api.infra.persistence.Persistable
-import org.starter.api.infra.persistence.PersistenceService
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpHeaders
@@ -21,6 +13,13 @@ import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.multipart.MultipartFile
+import org.starter.api.app.file.domain.Attachment
+import org.starter.api.app.file.domain.UploaderType
+import org.starter.api.app.file.ui.AttachmentDTO
+import org.starter.api.core.error.PersistenceException
+import org.starter.api.core.log.StructuredLogger
+import org.starter.api.core.util.TypeUtil
+import org.starter.api.infra.persistence.Persistable
 import java.io.IOException
 import java.util.function.Consumer
 
@@ -30,7 +29,6 @@ import java.util.function.Consumer
 @Service("attachmentService")
 class AttachmentService(
     private val dependencies: AttachmentDependencies,
-    private val persistenceService: PersistenceService,
 ) {
     /**
      * DTO를 통해 DB에 Attachment를 저장한다.
@@ -45,10 +43,11 @@ class AttachmentService(
         var attachment = Attachment()
         val id = attachmentDTO.id
         if (id != null) {
+            // #. 식별자에 해당하는 객체가 존재하지 않습니다.
             attachment =
-                dependencies.attachmentRepository.findById(id).orElseThrow( // #. 식별자에 해당하는 객체가 존재하지 않습니다.
-                    { PersistenceException(dependencies.messageSourceWrapper.get("COMMON.ERR03", attachmentDTO.id)) }
-                )
+                dependencies.attachmentRepository.findById(id).orElseThrow{
+                    PersistenceException(dependencies.messageSourceWrapper.get("COMMON.ERR03", attachmentDTO.id))
+                }
         }
 
         if (TypeUtil.notNull(attachmentDTO.altText)) {
@@ -96,13 +95,13 @@ class AttachmentService(
     fun getUpload(uploadId: Long): Attachment {
         log.debug("AttachmentService.getAttachment START")
         // #. 식별자 {0}에 해당하는 업로드 파일 객체가 존재하지 않습니다.
-        return dependencies.attachmentRepository.findById(uploadId).orElseThrow({
+        return dependencies.attachmentRepository.findById(uploadId).orElseThrow {
             PersistenceException(
                 dependencies.messageSourceWrapper.get(
                     "UPLOAD.ERR01", uploadId
                 )
             )
-        })
+        }
     }
 
     /**
@@ -156,7 +155,7 @@ class AttachmentService(
         // #.데이터베이스에 복사
         attachment.filePath = copyFilePath
         attachment.originPath = copyFilePath
-        persistenceService.insert(attachment)
+        dependencies.persistenceService.insert(attachment)
 
         log.debug("UploadService.copyUpload END")
         return attachment
@@ -171,7 +170,7 @@ class AttachmentService(
      */
     @Transactional(rollbackFor = [Exception::class])
     fun deleteAttachment(uploadId: Long) {
-        val attachment: Attachment? = persistenceService.find(Attachment::class.java, uploadId)
+        val attachment: Attachment? = dependencies.persistenceService.find(Attachment::class.java, uploadId)
         if (attachment != null) {
             attachment.deleteYn = true
         }
@@ -248,13 +247,13 @@ class AttachmentService(
      */
     @Transactional(rollbackFor = [Exception::class])
     @Throws(PersistenceException::class)
-    fun imageDownload(url: String): ResponseEntity<ByteArray?> {
-        val bytes: ByteArray? = dependencies.self.s3Download(url)
+    fun imageDownload(url: String): ResponseEntity<ByteArray> {
+        val bytes: ByteArray = dependencies.self.s3Download(url)
         val httpHeaders = HttpHeaders()
         httpHeaders.setContentType(MediaType.IMAGE_PNG)
         httpHeaders.setContentDispositionFormData("attachment", "image")
 
-        return ResponseEntity<ByteArray?>(bytes, httpHeaders, HttpStatus.OK)
+        return ResponseEntity<ByteArray>(bytes, httpHeaders, HttpStatus.OK)
     }
 
     /**
@@ -292,7 +291,7 @@ class AttachmentService(
      */
     @Throws(PersistenceException::class)
     fun copyFromS3Directory(sourceKey: String, targetKey: String) {
-        val bucketName: String? = dependencies.appProperties.s3.bucket
+        val bucketName: String = dependencies.appProperties.s3.bucket
         this.copyFromS3Directory(bucketName, sourceKey, targetKey)
     }
 
