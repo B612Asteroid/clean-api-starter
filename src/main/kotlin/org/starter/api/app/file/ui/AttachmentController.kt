@@ -12,7 +12,7 @@ import org.starter.api.app.file.service.AttachmentService
 import org.starter.api.app.file.ui.AttachmentDTO
 import org.starter.api.core.AppProperties
 import org.starter.api.core.BaseController
-import org.starter.api.core.response.ResponseObject
+import org.starter.api.core.ui.response.ResponseObject
 import org.starter.api.infra.s3.S3ClientProvider
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory

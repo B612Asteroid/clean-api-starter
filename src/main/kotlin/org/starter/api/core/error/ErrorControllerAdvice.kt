@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.ResponseStatus
 import org.starter.api.core.log.StructuredLogger
-import org.starter.api.core.response.ErrorResponse
-import org.starter.api.core.response.ResponseObject
+import org.starter.api.core.ui.response.ErrorResponse
+import org.starter.api.core.ui.response.ResponseObject
 
 @ControllerAdvice
 class ErrorControllerAdvice {

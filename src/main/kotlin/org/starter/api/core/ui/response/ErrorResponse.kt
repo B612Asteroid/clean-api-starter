@@ -1,4 +1,4 @@
-package org.starter.api.core.response
+package org.starter.api.core.ui.response
 
 /**
  * Error response

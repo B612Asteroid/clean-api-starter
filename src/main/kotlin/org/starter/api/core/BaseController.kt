@@ -7,9 +7,9 @@ import org.springframework.context.MessageSource
 import org.springframework.context.MessageSourceAware
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
-import org.starter.api.core.response.ErrorResponse
-import org.starter.api.core.response.ResponseObject
-import org.starter.api.core.response.SuccessResponse
+import org.starter.api.core.ui.response.ErrorResponse
+import org.starter.api.core.ui.response.ResponseObject
+import org.starter.api.core.ui.response.SuccessResponse
 
 /**
  * 모든 컨트롤러의 베이스가 되는 클래스
