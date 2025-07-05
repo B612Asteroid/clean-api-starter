@@ -1,4 +1,4 @@
-package org.starter.api.core
+package org.starter.api.core.ui
 
 import org.starter.api.core.util.TypeUtil
 import org.slf4j.Logger

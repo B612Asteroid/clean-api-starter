@@ -7,11 +7,9 @@ import com.amazonaws.services.s3.model.GroupGrantee
 import com.amazonaws.services.s3.model.ListMultipartUploadsRequest
 import com.amazonaws.services.s3.model.Permission
 import io.swagger.v3.oas.annotations.Operation
-import org.starter.api.app.file.service.AttachmentHelper
 import org.starter.api.app.file.service.AttachmentService
-import org.starter.api.app.file.ui.AttachmentDTO
 import org.starter.api.core.AppProperties
-import org.starter.api.core.BaseController
+import org.starter.api.core.ui.BaseController
 import org.starter.api.core.ui.response.ResponseObject
 import org.starter.api.infra.s3.S3ClientProvider
 import org.slf4j.Logger
@@ -19,12 +17,9 @@ import org.slf4j.LoggerFactory
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
-import org.springframework.web.bind.annotation.RequestPart
 import org.springframework.web.bind.annotation.RestController
-import org.springframework.web.multipart.MultipartFile
 import org.starter.api.core.error.PersistenceException
 import java.util.ArrayList
 
